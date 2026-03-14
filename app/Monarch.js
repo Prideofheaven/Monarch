@@ -1,6 +1,3 @@
-Monarch · JS
-Copy
-
 'use client'
 import { useState, useEffect, useRef } from "react";
  
@@ -825,3 +822,4 @@ export default function Monarch() {
   if (!showApp) return <LandingPage onEnterApp={() => setShowApp(true)} />;
   return <AppShell />;
 }
+ 
