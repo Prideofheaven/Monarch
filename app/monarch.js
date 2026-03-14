@@ -1,8 +1,8 @@
 'use client'
 import { useState, useEffect, useRef } from "react";
- 
+
 // ─── Mock Data ───────────────────────────────────────────────────────────────
- 
+
 const USERS = [
   { id: 1, name: "Amara Osei", role: "CEO & Founder", company: "NovaPay", avatar: "AO", bio: "Fintech founder building the next generation of payment infrastructure for emerging markets. Previously at Stripe.", skills: ["Fintech", "Payments", "Fundraising", "Product Strategy"], type: "Cofounder", location: "San Francisco, CA", match: 94, lookingFor: "Technical cofounder with backend expertise", connections: 312, raised: "$2.4M Seed" },
   { id: 2, name: "James Whitfield", role: "CTO", company: "HealthBridge", avatar: "JW", bio: "Full-stack engineer turned CTO. Passionate about using AI to democratize healthcare access globally.", skills: ["AI/ML", "Healthcare", "Engineering", "System Design"], type: "Cofounder", location: "Austin, TX", match: 91, lookingFor: "Business-minded cofounder for go-to-market", connections: 187, raised: "$800K Pre-Seed" },
@@ -11,23 +11,23 @@ const USERS = [
   { id: 5, name: "Sofia Rodriguez", role: "Founder & CEO", company: "EduLaunch", avatar: "SR", bio: "EdTech entrepreneur reimagining professional development. Background in instructional design and product.", skills: ["EdTech", "Product", "UX Research", "Community"], type: "Cofounder", location: "Miami, FL", match: 82, lookingFor: "Engineering cofounder passionate about education", connections: 156, raised: "$500K Pre-Seed" },
   { id: 6, name: "David Kimura", role: "Venture Partner", company: "Catalyst Ventures", avatar: "DK", bio: "Early-stage investor and operator. Focused on marketplace and platform businesses in underserved verticals.", skills: ["Investing", "Marketplaces", "Strategy", "Operations"], type: "Adviser", location: "Chicago, IL", match: 79, lookingFor: "Marketplace founders with unique supply-side advantages", connections: 743, raised: "$120M fund" },
 ];
- 
+
 const MESSAGES = [
   { id: 1, from: USERS[2], preview: "I'd love to chat about your go-to-market strategy. I've seen similar patterns...", time: "2m ago", unread: true },
   { id: 2, from: USERS[0], preview: "Thanks for connecting! Your background in payments is exactly what we need.", time: "1h ago", unread: true },
   { id: 3, from: USERS[4], preview: "Great meeting you at the demo day. Let's schedule a follow-up this week.", time: "3h ago", unread: false },
   { id: 4, from: USERS[3], preview: "I put together some notes on the growth framework we discussed.", time: "1d ago", unread: false },
 ];
- 
+
 const FEED_POSTS = [
   { id: 1, author: USERS[2], content: "Hot take: Most startups don't fail because of bad ideas. They fail because founders wait too long to talk to customers. Ship early, learn fast, iterate relentlessly.", time: "2h ago", likes: 47, comments: 12, tag: "Insight" },
   { id: 2, author: USERS[5], content: "We just closed our $120M Fund III focused on marketplace businesses. If you're building something with a unique supply-side advantage, let's talk.", time: "5h ago", likes: 83, comments: 31, tag: "Opportunity" },
   { id: 3, author: USERS[0], content: "Looking for a technical cofounder with backend/infrastructure experience. We're building payment rails for emerging markets and just closed our seed round. DM me!", time: "8h ago", likes: 29, comments: 8, tag: "Seeking Cofounder" },
   { id: 4, author: USERS[3], content: "Just published my framework for going from $0 to $100K ARR in B2B SaaS. Spoiler: it's not about the product, it's about the sales motion. Link in bio.", time: "1d ago", likes: 156, comments: 42, tag: "Resource" },
 ];
- 
+
 // ─── Styles ──────────────────────────────────────────────────────────────────
- 
+
 const colors = {
   bg: "#0B0E11",
   bgCard: "#12161B",
@@ -46,9 +46,9 @@ const colors = {
   greenDim: "rgba(74,222,128,0.12)",
   red: "#F87171",
 };
- 
+
 // ─── Reusable Components ─────────────────────────────────────────────────────
- 
+
 function Avatar({ initials, size = 44, gold = false }) {
   return (
     <div style={{
@@ -62,7 +62,7 @@ function Avatar({ initials, size = 44, gold = false }) {
     }}>{initials}</div>
   );
 }
- 
+
 function Badge({ children, variant = "default" }) {
   const styles = {
     default: { bg: "rgba(255,255,255,0.06)", color: colors.textMuted, border: colors.border },
@@ -79,7 +79,7 @@ function Badge({ children, variant = "default" }) {
     }}>{children}</span>
   );
 }
- 
+
 function Button({ children, variant = "primary", onClick, style = {}, small = false }) {
   const [hovered, setHovered] = useState(false);
   const base = {
@@ -117,7 +117,7 @@ function Button({ children, variant = "primary", onClick, style = {}, small = fa
     >{children}</button>
   );
 }
- 
+
 function Card({ children, style = {}, onClick, hoverable = true }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -133,7 +133,7 @@ function Card({ children, style = {}, onClick, hoverable = true }) {
     >{children}</div>
   );
 }
- 
+
 function MatchRing({ percent, size = 48 }) {
   const r = (size - 6) / 2;
   const circ = 2 * Math.PI * r;
@@ -153,7 +153,7 @@ function MatchRing({ percent, size = 48 }) {
     </div>
   );
 }
- 
+
 function NavItem({ icon, label, active, onClick, badge: badgeCount }) {
   return (
     <button onClick={onClick} style={{
@@ -174,20 +174,20 @@ function NavItem({ icon, label, active, onClick, badge: badgeCount }) {
     </button>
   );
 }
- 
+
 // ─── Landing Page ────────────────────────────────────────────────────────────
- 
+
 function LandingPage({ onEnterApp }) {
   const [email, setEmail] = useState("");
   const [joined, setJoined] = useState(false);
   const [visible, setVisible] = useState(false);
- 
+
   useEffect(() => { setTimeout(() => setVisible(true), 100); }, []);
- 
+
   const handleJoin = () => {
     if (email.includes("@")) setJoined(true);
   };
- 
+
   return (
     <div style={{
       minHeight: "100vh", background: colors.bg, color: colors.text,
@@ -202,7 +202,7 @@ function LandingPage({ onEnterApp }) {
           radial-gradient(ellipse 900px 400px at 50% 50%, rgba(212,168,83,0.03), transparent)
         `,
       }} />
- 
+
       {/* Nav */}
       <nav style={{
         display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -224,7 +224,7 @@ function LandingPage({ onEnterApp }) {
           <Button variant="primary" small onClick={onEnterApp}>Get Early Access</Button>
         </div>
       </nav>
- 
+
       {/* Hero */}
       <main style={{
         maxWidth: 1200, margin: "0 auto", padding: "80px 48px 60px",
@@ -243,7 +243,7 @@ function LandingPage({ onEnterApp }) {
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: colors.green }} />
             <span style={{ fontSize: 13, color: colors.gold, fontWeight: 500 }}>97 founders already on the waitlist</span>
           </div>
- 
+
           <h1 style={{
             fontFamily: "'Playfair Display', serif", fontSize: "clamp(40px, 6vw, 76px)",
             fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em",
@@ -256,14 +256,14 @@ function LandingPage({ onEnterApp }) {
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             }}> missing half</span>
           </h1>
- 
+
           <p style={{
             fontSize: 18, color: colors.textMuted, maxWidth: 560, margin: "0 auto 48px",
             lineHeight: 1.65, fontWeight: 300,
           }}>
             Monarch connects entrepreneurs, cofounders, advisers, and consultants through intelligent matching — so you can build what matters, together.
           </p>
- 
+
           {/* Email Input */}
           {!joined ? (
             <div style={{
@@ -296,7 +296,7 @@ function LandingPage({ onEnterApp }) {
             </div>
           )}
         </div>
- 
+
         {/* Feature Cards */}
         <div style={{
           display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
@@ -322,7 +322,7 @@ function LandingPage({ onEnterApp }) {
             </Card>
           ))}
         </div>
- 
+
         {/* Social Proof */}
         <div style={{
           marginTop: 100, paddingTop: 60,
@@ -338,7 +338,7 @@ function LandingPage({ onEnterApp }) {
             ))}
           </div>
         </div>
- 
+
         {/* CTA */}
         <div style={{ marginTop: 100, paddingBottom: 80 }}>
           <h2 style={{
@@ -352,26 +352,26 @@ function LandingPage({ onEnterApp }) {
     </div>
   );
 }
- 
+
 // ─── App Pages ───────────────────────────────────────────────────────────────
- 
+
 function DiscoverPage({ onSelectUser }) {
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
   const types = ["All", "Cofounder", "Adviser", "Consultant"];
- 
+
   const filtered = USERS.filter(u =>
     (filter === "All" || u.type === filter) &&
     (search === "" || u.name.toLowerCase().includes(search.toLowerCase()) || u.skills.some(s => s.toLowerCase().includes(search.toLowerCase())))
   );
- 
+
   return (
     <div>
       <div style={{ marginBottom: 8 }}>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>Discover</h1>
         <p style={{ color: colors.textMuted, fontSize: 14, marginTop: 6 }}>Find your next cofounder, adviser, or consultant</p>
       </div>
- 
+
       {/* Search & Filters */}
       <div style={{ display: "flex", gap: 12, marginBottom: 28, flexWrap: "wrap", alignItems: "center" }}>
         <input
@@ -395,7 +395,7 @@ function DiscoverPage({ onSelectUser }) {
           ))}
         </div>
       </div>
- 
+
       {/* User Cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 16 }}>
         {filtered.map(user => (
@@ -411,16 +411,16 @@ function DiscoverPage({ onSelectUser }) {
                 </div>
                 <MatchRing percent={user.match} />
               </div>
- 
+
               <p style={{ fontSize: 13, color: colors.textMuted, lineHeight: 1.55, margin: "0 0 16px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                 {user.bio}
               </p>
- 
+
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }}>
                 <Badge variant="gold">{user.type}</Badge>
                 {user.skills.slice(0, 2).map(s => <Badge key={s}>{s}</Badge>)}
               </div>
- 
+
               <div style={{
                 padding: "12px 0 0", borderTop: `1px solid ${colors.border}`,
                 display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -435,7 +435,7 @@ function DiscoverPage({ onSelectUser }) {
     </div>
   );
 }
- 
+
 function ProfilePage({ user, onBack }) {
   if (!user) return null;
   return (
@@ -445,7 +445,7 @@ function ProfilePage({ user, onBack }) {
         color: colors.textMuted, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
         fontSize: 14, marginBottom: 24, padding: 0,
       }}>← Back to Discover</button>
- 
+
       <Card hoverable={false} style={{ marginBottom: 20 }}>
         <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
           <Avatar initials={user.avatar} size={80} gold={user.match >= 90} />
@@ -464,7 +464,7 @@ function ProfilePage({ user, onBack }) {
           <MatchRing percent={user.match} size={72} />
         </div>
       </Card>
- 
+
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
         <Card hoverable={false}>
           <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, margin: "0 0 12px", fontWeight: 600 }}>About</h3>
@@ -477,7 +477,7 @@ function ProfilePage({ user, onBack }) {
           <p style={{ fontSize: 14, color: colors.gold, fontWeight: 600, margin: 0 }}>{user.raised}</p>
         </Card>
       </div>
- 
+
       <Card hoverable={false} style={{ marginTop: 20 }}>
         <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, margin: "0 0 16px", fontWeight: 600 }}>Skills & Expertise</h3>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -487,12 +487,12 @@ function ProfilePage({ user, onBack }) {
     </div>
   );
 }
- 
+
 function MessagesPage() {
   const [selected, setSelected] = useState(null);
   const [newMsg, setNewMsg] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
- 
+
   const handleSend = () => {
     if (!newMsg.trim()) return;
     setChatMessages([...chatMessages, { from: "me", text: newMsg, time: "now" }]);
@@ -503,7 +503,7 @@ function MessagesPage() {
       }]);
     }, 1500);
   };
- 
+
   return (
     <div style={{ display: "flex", gap: 0, height: "calc(100vh - 120px)", marginTop: -8 }}>
       {/* Sidebar */}
@@ -536,7 +536,7 @@ function MessagesPage() {
           </div>
         ))}
       </div>
- 
+
       {/* Chat Area */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", paddingLeft: 24 }}>
         {selected ? (
@@ -551,7 +551,7 @@ function MessagesPage() {
                 <p style={{ margin: 0, fontSize: 12, color: colors.textMuted }}>{selected.from.role} · {selected.from.company}</p>
               </div>
             </div>
- 
+
             <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 12 }}>
               {chatMessages.map((msg, i) => (
                 <div key={i} style={{
@@ -569,7 +569,7 @@ function MessagesPage() {
                 </div>
               ))}
             </div>
- 
+
             <div style={{ display: "flex", gap: 10, paddingTop: 16, borderTop: `1px solid ${colors.border}`, marginTop: 16 }}>
               <input
                 placeholder="Type a message..."
@@ -594,14 +594,14 @@ function MessagesPage() {
     </div>
   );
 }
- 
+
 function MarketplacePage() {
   const experts = USERS.filter(u => u.type === "Adviser" || u.type === "Consultant");
   return (
     <div>
       <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>Expert Marketplace</h1>
       <p style={{ color: colors.textMuted, fontSize: 14, marginTop: 0, marginBottom: 32 }}>Book sessions with vetted advisers and consultants</p>
- 
+
       {experts.map(expert => (
         <Card key={expert.id} style={{ marginBottom: 16, padding: 0 }}>
           <div style={{ padding: 28 }}>
@@ -639,14 +639,14 @@ function MarketplacePage() {
     </div>
   );
 }
- 
+
 function FeedPage() {
   const [liked, setLiked] = useState({});
   return (
     <div>
       <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>Community</h1>
       <p style={{ color: colors.textMuted, fontSize: 14, marginTop: 0, marginBottom: 28 }}>Insights and opportunities from the Monarch network</p>
- 
+
       {/* Compose */}
       <Card hoverable={false} style={{ marginBottom: 24 }}>
         <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
@@ -665,7 +665,7 @@ function FeedPage() {
           </div>
         </div>
       </Card>
- 
+
       {/* Posts */}
       {FEED_POSTS.map(post => (
         <Card key={post.id} hoverable={false} style={{ marginBottom: 16 }}>
@@ -696,7 +696,7 @@ function FeedPage() {
     </div>
   );
 }
- 
+
 function MyProfilePage() {
   return (
     <div>
@@ -722,7 +722,7 @@ function MyProfilePage() {
           </div>
         </div>
       </Card>
- 
+
       <Card hoverable={false} style={{ marginTop: 20 }}>
         <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, margin: "0 0 16px", fontWeight: 600 }}>Complete Your Profile</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -752,13 +752,13 @@ function MyProfilePage() {
     </div>
   );
 }
- 
+
 // ─── Main App ────────────────────────────────────────────────────────────────
- 
+
 function AppShell() {
   const [page, setPage] = useState("discover");
   const [selectedUser, setSelectedUser] = useState(null);
- 
+
   const renderPage = () => {
     if (selectedUser) return <ProfilePage user={selectedUser} onBack={() => setSelectedUser(null)} />;
     switch (page) {
@@ -770,7 +770,7 @@ function AppShell() {
       default: return <DiscoverPage onSelectUser={setSelectedUser} />;
     }
   };
- 
+
   return (
     <div style={{
       display: "flex", minHeight: "100vh", background: colors.bg, color: colors.text,
@@ -791,21 +791,21 @@ function AppShell() {
           }}>M</div>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700 }}>Monarch</span>
         </div>
- 
+
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <NavItem icon="◇" label="Discover" active={page === "discover" && !selectedUser} onClick={() => { setPage("discover"); setSelectedUser(null); }} />
           <NavItem icon="💬" label="Messages" active={page === "messages"} onClick={() => { setPage("messages"); setSelectedUser(null); }} badge={2} />
           <NavItem icon="◈" label="Marketplace" active={page === "marketplace"} onClick={() => { setPage("marketplace"); setSelectedUser(null); }} />
           <NavItem icon="◎" label="Community" active={page === "feed"} onClick={() => { setPage("feed"); setSelectedUser(null); }} />
         </div>
- 
+
         <div style={{ marginTop: "auto" }}>
           <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: 12 }}>
             <NavItem icon="●" label="My Profile" active={page === "profile"} onClick={() => { setPage("profile"); setSelectedUser(null); }} />
           </div>
         </div>
       </aside>
- 
+
       {/* Main Content */}
       <main style={{ flex: 1, padding: "32px 40px", maxWidth: 960, overflowY: "auto" }}>
         {renderPage()}
@@ -813,13 +813,12 @@ function AppShell() {
     </div>
   );
 }
- 
+
 // ─── Root ────────────────────────────────────────────────────────────────────
- 
+
 export default function Monarch() {
   const [showApp, setShowApp] = useState(false);
- 
+
   if (!showApp) return <LandingPage onEnterApp={() => setShowApp(true)} />;
   return <AppShell />;
 }
- 
